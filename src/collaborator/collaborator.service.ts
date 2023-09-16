@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
 import { UpdateCollaboratorDto } from './dto/update-collaborator.dto';
+import { CollaboratorRepository } from './collaborator.repository';
 
 @Injectable()
 export class CollaboratorService {
-  create(createCollaboratorDto: CreateCollaboratorDto) {
-    return 'This action adds a new collaborator';
+  constructor(
+    private readonly collaboratorRepository: CollaboratorRepository,
+  ) {}
+
+  async create(createCollaboratorDto: CreateCollaboratorDto) {
+    return this.collaboratorRepository.register(createCollaboratorDto);
   }
 
   findAll() {

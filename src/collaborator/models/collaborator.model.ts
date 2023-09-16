@@ -20,6 +20,7 @@ export class Collaborator {
   @Prop({
     type: String,
     required: true,
+    unique: true,
   })
   email: string;
 
@@ -42,7 +43,7 @@ export class Collaborator {
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
   })
   n_doc: string;
 
