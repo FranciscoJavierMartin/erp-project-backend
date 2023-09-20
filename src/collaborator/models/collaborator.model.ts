@@ -1,10 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import {
+  CallbackWithoutResultAndOptionalError,
+  HydratedDocument,
+} from 'mongoose';
+import * as bcrypt from 'bcryptjs';
 
 @Schema({
   collection: 'Collaborator',
+  toJSON: {
+    transform(_doc, ret) {
+      delete ret.password;
+      return ret;
+    },
+  },
 })
-export class Collaborator {
+export class CollaboratorModel {
   @Prop({
     type: String,
     required: true,
@@ -66,6 +76,28 @@ export class Collaborator {
   country?: string;
 }
 
-export type CollaboratorDocument = HydratedDocument<Collaborator>;
+export type CollaboratorDocument = HydratedDocument<CollaboratorModel>;
 
-export const CollaboratorSchema = SchemaFactory.createForClass(Collaborator);
+export const CollaboratorSchema =
+  SchemaFactory.createForClass(CollaboratorModel);
+
+CollaboratorSchema.pre(
+  'save',
+  function (this: Collaborator, next: CallbackWithoutResultAndOptionalError) {
+    const hashedPassword: string = bcrypt.hashSync(this.password);
+    this.password = hashedPassword;
+    this.email = this.email.toLowerCase();
+    next();
+  },
+);
+
+CollaboratorSchema.methods.comparePassword = function (
+  password: string,
+): boolean {
+  return bcrypt.compareSync(password, this.password);
+};
+
+export type Collaborator = CollaboratorModel &
+  CollaboratorDocument & {
+    comparePassword: (password: string) => boolean;
+  };

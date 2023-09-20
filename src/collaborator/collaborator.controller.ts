@@ -14,6 +14,6 @@ export class CollaboratorController {
 
   @Post('login')
   login(@Body() loginCollaboratorDto: LoginCollaboratorDto) {
-    console.log('Login', loginCollaboratorDto);
+    return this.collaboratorService.login(loginCollaboratorDto);
   }
 }
