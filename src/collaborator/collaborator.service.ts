@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { RegisterCollaboratorDto } from './dto/register-collaborator.dto';
 import { CollaboratorRepository } from './collaborator.repository';
 import { LoginCollaboratorDto } from './dto/login-collaborator.dto';
@@ -6,6 +7,7 @@ import { LoginCollaboratorDto } from './dto/login-collaborator.dto';
 @Injectable()
 export class CollaboratorService {
   constructor(
+    private jwtService: JwtService,
     private readonly collaboratorRepository: CollaboratorRepository,
   ) {}
 
@@ -26,6 +28,17 @@ export class CollaboratorService {
       throw new BadRequestException('Invalid credentials');
     }
 
-    return collaborator;
+    const access_token = await this.jwtService.signAsync({
+      sub: collaborator._id,
+      firstName: collaborator.firstName,
+      lastName: collaborator.lastName,
+      email: collaborator.email,
+      role: collaborator.role,
+    });
+
+    return {
+      collaborator,
+      access_token,
+    };
   }
 }
