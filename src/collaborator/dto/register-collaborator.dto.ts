@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateCollaboratorDto {
+export class RegisterCollaboratorDto {
   @IsString()
   @IsNotEmpty()
   firstName: string;

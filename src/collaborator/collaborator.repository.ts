@@ -6,7 +6,7 @@ import {
 } from './models/collaborator.model';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
-import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
+import { RegisterCollaboratorDto } from './dto/register-collaborator.dto';
 
 @Injectable()
 export class CollaboratorRepository {
@@ -15,7 +15,7 @@ export class CollaboratorRepository {
     private collaboratorModel: Model<CollaboratorDocument>,
   ) {}
 
-  async register(collaborator: CreateCollaboratorDto) {
+  async register(collaborator: RegisterCollaboratorDto) {
     collaborator.password = bcrypt.hashSync('123456789');
     const collaboratorCreated = new this.collaboratorModel({ ...collaborator });
     return await collaboratorCreated.save();

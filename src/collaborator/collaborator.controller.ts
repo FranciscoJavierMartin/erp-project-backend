@@ -1,13 +1,19 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { CollaboratorService } from './collaborator.service';
-import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
+import { RegisterCollaboratorDto } from './dto/register-collaborator.dto';
+import { LoginCollaboratorDto } from './dto/login-collaborator.dto';
 
 @Controller('collaborator')
 export class CollaboratorController {
   constructor(private readonly collaboratorService: CollaboratorService) {}
 
   @Post('register')
-  register(@Body() createCollaboratorDto: CreateCollaboratorDto) {
-    return this.collaboratorService.create(createCollaboratorDto);
+  register(@Body() registerCollaboratorDto: RegisterCollaboratorDto) {
+    return this.collaboratorService.create(registerCollaboratorDto);
+  }
+
+  @Post('login')
+  login(@Body() loginCollaboratorDto: LoginCollaboratorDto) {
+    console.log('Login', loginCollaboratorDto);
   }
 }
